@@ -18,7 +18,7 @@ getgenv().run = function(Case, Cases)
         if It.Condition ~= Case then
             continue
         end
-        It.Case = It.Case or util.getNextCase(i, Cases)
+        It.Case = It.Case or Util.getNextCase(i, Cases)
         It.Case(Stop)
     end
     if default then
