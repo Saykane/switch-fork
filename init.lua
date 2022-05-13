@@ -1,65 +1,58 @@
-local util = loadstring(syn.request({Url = "https://raw.githubusercontent.com/Saykane/switch-fork/main/util.lua", Method = "GET"}).Body)()
+local Util = loadstring(syn.request({Url = "https://raw.githubusercontent.com/Saykane/switch-fork/main/util.lua", Method = "GET"}).Body)()
 
-local function run(case, cases)
-	local breakIt = false
-	local default 
-
-	local function stop()
-		breakIt = true
-	end
-
-	for i, it in ipairs(cases) do
-		local isFunc = typeof(it) == "function"
-		if breakIt then 
-			return 
-		elseif isFunc == false and it.sentence_type == "default" then
-			default = it.case
-			continue
-		end
-
-		it = isFunc and it() or it
-		if it.condition ~= case then
-			continue
-		end
-
-		it.case = it.case or util.getNextCase(i, cases)
-		it.case(stop)
-	end
-
-	if default then
-		default()
-	end
+getgenv().run = function(Case, Cases)
+    local BreakIt = false
+    local default
+    local function Stop()
+        BreakIt = true
+    end
+    for i, It in ipairs(Cases) do
+        local isFunc = typeof(It) == "function"
+        if BreakIt then
+            return
+        elseif isFunc == false and It.Sentence_Type == "default" then
+            default = It.Case
+            continue
+        end
+        It = isFunc and It() or It
+        if It.Condition ~= Case then
+            continue
+        end
+        It.Case = It.Case or util.getNextCase(i, Cases)
+        It.Case(Stop)
+    end
+    if default then
+        default()
+    end
 end
 
-local function return_it(sentence_type, condition, case)
-	local case_type = typeof(case) == "table"
-	
-	case = case_type and case[1] or case
-	assert(case_type ~= "function", "You must provide a function")
-
-	return {
-		sentence_type = sentence_type,
-		condition = condition,
-		case = case
-	}
+getgenv().return_it = function(Sentence_Type, Condition, Case)
+    local Case_Type = typeof(Case) == "table"
+    Case = Case_Type and Case[1] or Case
+    assert(Case_Type ~= "function", "You must provide a function.")
+    return {
+        Sentence_Type = Sentence_Type,
+        Condition = Condition,
+        Case = Case
+    }
 end
 
-local function switch(value)
-	return util.wrap(run, value)
+getgenv().switch = function(Value)
+    return Util.wrap(run, Value)
 end
 
-local function default(case)
-	return return_it("default", 0, case)
+getgenv().default = function(Case)
+    return return_it("default", 0, Case)
 end
 
-local function case(condition)
-	assert(condition ~= nil, "You must provide a condition")
-	return util.wrap(return_it, "case", condition)
+getgenv().case = function(Condition)
+    assert(Condition ~= nil, "You must provide a condition.")
+    return Util.wrap(return_it, "case", Condition)
 end
 
 local module = {}
 function module.getFunctions()
-	return switch, case, default
+    return switch, case, default
 end
 
 return module
