@@ -13,8 +13,8 @@ end
 
 function module.getNextCase(S, Cases)
     for i = S, #Cases do
-        if typeof(Cases[i]) == "table" and Cases[i].case then
-            return Cases[i].case
+        if typeof(Cases[i]) == "table" and Cases[i].Case then
+            return Cases[i].Case
         end
     end
 end
