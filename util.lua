@@ -1,22 +1,24 @@
 local module = {}
 
-function module.wrap(F, ...)
-    local Args = {...}
-    return function(...)
-        local __Args = {...}
-        for i, Value in ipairs(Args) do
-            table.insert(__Args, i, Value)
-        end
-        return F(unpack(__Args))
-    end
+function module.wrap(f, ...)
+	local args = { ... }
+
+	return function(...)
+		local __args = { ... }
+        for i, value in ipairs(args) do
+			table.insert(__args, i, value)
+		end
+
+		return f(unpack(__args))
+	end
 end
 
-function module.getNextCase(S, Cases)
-    for i = S, #Cases do
-        if typeof(Cases[i]) == "table" and Cases[i].Case then
-            return Cases[i].Case
-        end
-    end
+function module.getNextCase(s, cases)
+	for i = s, #cases do
+		if typeof(cases[i]) == "table" and cases[i].case then
+			return cases[i].case
+		end
+	end
 end
 
 return module
