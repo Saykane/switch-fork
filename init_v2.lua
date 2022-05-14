@@ -60,4 +60,4 @@ getgenv().case = function(condition)
     return util.wrap(return_it, "case", condition)
 end
 
-return getgenv().switch, getgenv().case, getgen().default
+return getgenv().switch, getgenv().case, getgenv().default
